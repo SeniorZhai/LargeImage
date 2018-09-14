@@ -701,6 +701,8 @@ public class LargeImageView extends View implements BlockImageLoader.OnImageLoad
 
     private GestureDetector.SimpleOnGestureListener simpleOnGestureListener = new GestureDetector.SimpleOnGestureListener() {
 
+        public long scrollTime = 0;
+
         @Override
         public boolean onDown(MotionEvent e) {
             if (!mScroller.isFinished()) {
@@ -719,7 +721,7 @@ public class LargeImageView extends View implements BlockImageLoader.OnImageLoad
             if (!isEnabled()) {
                 return false;
             }
-            if (onClickListener != null && isClickable()) {
+            if ((System.currentTimeMillis() - scrollTime) > 200 && onClickListener != null && isClickable()) {
                 onClickListener.onClick(LargeImageView.this);
             }
             return true;
@@ -730,6 +732,7 @@ public class LargeImageView extends View implements BlockImageLoader.OnImageLoad
             if (!isEnabled()) {
                 return false;
             }
+            scrollTime = System.currentTimeMillis();
             overScrollByCompat((int) distanceX, (int) distanceY, getScrollX(), getScrollY(), getScrollRangeX(), getScrollRangeY(), 0, 0, false);
             return true;
         }
